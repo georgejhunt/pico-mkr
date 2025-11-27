@@ -21,7 +21,7 @@ def connect_wifi():
         time.sleep(1)
     while not wlan.isconnected():
         wlan.connect(wlan_id, wlan_pass)
-    print("Connected... IP: " + wlan.ifconfig()[0])  
+    print("Connected... IP: " + wlan.ifconfig())  
 
     
 server = MicroPyServer()
