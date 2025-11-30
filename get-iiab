@@ -1,0 +1,47 @@
+#!/bin/bash -x
+# script to initialize a raspi device to connect and make PICO programs`
+FLAGDIR=/etc/iiab
+APT_PATH=/usr/bin
+set -e  #stop if error
+
+sudo mkdir -p /etc/iiab
+mkdir -p ~/pico
+
+# Check for running as root -- most of pico-mkr should be unprivledged
+if [[ $(id -un) == "root" ]]; then
+    echo -e "\nPlease run: sudo iiab\n"
+    exit 1
+fi
+
+# Install some useful stuff
+sudo apt install tree
+sudo apt install plocate
+
+echo -e "\nGet iiab as a model for installing jupyter\n"
+if [ ! -d /opt/iiab/iiab ]; then
+   sudo mkdir -p /opt/iiab
+   cd /opt/iiab
+   sudo git clone https://github.com/iiab/iiab.git
+fi
+
+echo -e "\nGet virtual-env package"
+sudo $APT_PATH/apt update
+sudo $APT_PATH/apt -y install python3-venv
+
+mkdir -p ~/pico
+if [ ! -d /usr/local/ansible ]; then
+   echo -e "\nCreate virtual environment for Ansible"
+   sudo python3 -m venv /usr/local/ansible
+fi
+
+if [ ! -d ~/pico/venv]; then
+   echo -e "\nCreate virtual environment for jupyter"
+   sudo python3 -m venv  ~/pico/venv
+fi
+
+echo -e "\n\nINSTALL ANSIBLE ..\n"
+if [ ! -d /usr/sbin/ansible ]; then
+   sudo apt install ansible
+fi
+
+
