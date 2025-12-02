@@ -9,19 +9,28 @@ mkdir -p ~/pico
 
 # Check for running as root -- most of pico-mkr should be unprivledged
 if [[ $(id -un) == "root" ]]; then
-    echo -e "\nPlease run: sudo iiab\n"
-    exit 1
+	echo -e "\nPlease run: sudo iiab\n"
+	exit 1
 fi
 
 # Install some useful stuff
-sudo apt install tree
-sudo apt install plocate
+sudo apt install -y tree
+sudo apt install -y plocate
+sudo apt install -y vim
+
+# Get rid of stuff
+cd 
+rmdir Downloads/
+rmdir Music/
+rmdir Pictures/
+rmdir Public/
+rmdir Videos/
 
 echo -e "\nGet iiab as a model for installing jupyter\n"
 if [ ! -d /opt/iiab/iiab ]; then
-   sudo mkdir -p /opt/iiab
-   cd /opt/iiab
-   sudo git clone https://github.com/iiab/iiab.git
+	sudo mkdir -p /opt/iiab
+	cd /opt/iiab
+	sudo git clone https://github.com/iiab/iiab.git
 fi
 
 echo -e "\nGet virtual-env package"
@@ -30,13 +39,13 @@ sudo $APT_PATH/apt -y install python3-venv
 
 mkdir -p ~/pico
 if [ ! -d /usr/local/ansible ]; then
-   echo -e "\nCreate virtual environment for Ansible"
-   sudo python3 -m venv /usr/local/ansible
+	echo -e "\nCreate virtual environment for Ansible"
+	sudo python3 -m venv /usr/local/ansible
 fi
 
-if [ ! -d ~/pico/venv]; then
-   echo -e "\nCreate virtual environment for jupyter"
-   sudo python3 -m venv  ~/pico/venv
+if [ ! -d ~/pico/venv ]; then
+	echo -e "\nCreate virtual environment for jupyter"
+	python3  -m venv --system-site-packages ~/pico/venv
 fi
 
 echo -e "\n\nINSTALL ANSIBLE ..\n"
@@ -44,4 +53,5 @@ if [ ! -d /usr/sbin/ansible ]; then
    sudo apt install ansible
 fi
 
+pip install -y mpremote
 
