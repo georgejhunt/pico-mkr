@@ -29,7 +29,7 @@ import re
 import socket
 import sys
 import io
-
+import secrets
 
 class MicroPyServer(object):
 
@@ -53,7 +53,6 @@ class MicroPyServer(object):
         print("Server start")
         while True:
             if self._sock is None:
-                print("No socket")
                 break
             try:
                 self._connect, address = self._sock.accept()
@@ -151,6 +150,7 @@ class MicroPyServer(object):
             self.send("Content-Type: text/plain\r\n\r\n")
             self.send("Error: " + str_error)
             print(str_error)
-if __name__ == "__main__":
-    up_wifi()
+
+server = MicroPyServer()
+
 

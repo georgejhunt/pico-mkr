@@ -1,4 +1,5 @@
 from micropyserver import MicroPyServer
+from wifi_pico import WifiPico
 import utils
 ## Quick start
 def connect_wifi():
@@ -24,8 +25,6 @@ def connect_wifi():
     print("Connected... IP: " + wlan.ifconfig())  
 
     
-server = MicroPyServer()
-
 
 def index(request):
     server.send('OK')
@@ -45,10 +44,14 @@ def get_cookies(request):
     utils.send_response(server, str(cookies))
 
 
-server.add_route("/", index)
-server.add_route("/stop", stop)
-server.add_route("/set_cookies", set_cookies)
-server.add_route("/get_cookies", get_cookies)
 
-connect_wifi()
-server.start()
+if __name__ == "__main__":
+    wfp = WifiPico()
+    ip = wfp.connect_wifi()
+    
+    server = MicroPyServer(host=ip)
+    server.add_route("/", index)
+    server.add_route("/stop", stop)
+    server.add_route("/set_cookies", set_cookies)
+    server.add_route("/get_cookies", get_cookies)
+    server.start()
