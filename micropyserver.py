@@ -26,10 +26,10 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 """
 import re
-import socket
+import usocket as socket
 import sys
 import io
-import secrets
+
 
 class MicroPyServer(object):
 
@@ -46,16 +46,18 @@ class MicroPyServer(object):
 
     def start(self):
         """ Start server """
+        print("Server start")
         self._sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self._sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+        print("Listening on %s Port %s"%(self._host, self._port,))
         self._sock.bind((self._host, self._port))
         self._sock.listen(1)
-        print("Server start")
         while True:
             if self._sock is None:
                 break
             try:
                 self._connect, address = self._sock.accept()
+                print("Packet from %s"%(address[0],))
                 request = self.get_request()
                 if len(request) == 0:
                     self._connect.close()
@@ -150,7 +152,4 @@ class MicroPyServer(object):
             self.send("Content-Type: text/plain\r\n\r\n")
             self.send("Error: " + str_error)
             print(str_error)
-
-server = MicroPyServer()
-
 

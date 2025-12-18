@@ -12,18 +12,10 @@ import secrets
 
 def connect():
     #Connect to WLAN
-    wlan = network.WLAN(network.AP_IF)
-    
-    # Configure the AP with a specific SSID, password, and channel
-    wlan.config(ssid='Pico_AP', password=secrets.WIFI_PASSWORD, channel=6)
-
-    
-    wlan.connect(secrets.WIFI_SSID, secrets.WIFI_PASSWORD)
-    # Create an AP interface object
-
-# Activate the AP interface
+    wlan = network.WLAN(network.STA_IF)
     wlan.active(True)
-    
+    #wlan.connect(secrets.WIFI_SSID, secrets.WIFI_PASSWORD,channel=6)
+    wlan.connect(secrets.WIFI_SSID, secrets.WIFI_PASSWORD)
     while wlan.isconnected() == False:
         if rp2.bootsel_button() == 1:
             sys.exit()
@@ -75,22 +67,7 @@ def serve(connection):
         client = connection.accept()[0]
         request = client.recv(1024)
         request = str(request)
-        #print(request)
-        try:
-            request = request.split()[1]
-        except IndexError:
-            pass
-        if request == '/lighton?':
-            pico_led.on()
-            state = 'ON'
-        elif request =='/lightoff?':
-            pico_led.off()
-            state = 'OFF'
-        elif request == '/close?':
-            sys.exit()
-        temperature = pico_temp_sensor.temp
-        html = webpage(temperature, state)
-
+        print(request)
         html = webpage(temperature, state)
         client.send(html)
         client.close()

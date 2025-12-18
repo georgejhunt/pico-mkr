@@ -1,0 +1,31 @@
+#!/bin/bash -x
+# mechanize jupyter
+set -e
+
+# Check for running as root -- most of pico-mkr should be unprivledged
+if [[ $(( $EUID )) == 0 ]]; then
+	echo -e "\nPlease run as normal unprivileged user\n"
+	#exit 1
+fi
+
+sudo rm -rf ~/pico/venv
+
+python -m venv ~/pico/venv
+
+source ~/pico/venv/bin/activate
+
+if [ ! -f ~/pico/venv/bin/jupyter ]; then
+	pip install jupyterlab
+else
+	echo -e "Jupyter already installed. Skipping. . ."
+fi
+
+pip install jupyter-micropython-upydevice
+
+
+python -m mpy_kernel_upydevice.install
+
+pip install jupyterlab-vim
+
+pip install mpremote
+

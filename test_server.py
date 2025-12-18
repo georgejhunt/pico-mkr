@@ -2,29 +2,6 @@ from micropyserver import MicroPyServer
 from wifi_pico import WifiPico
 import utils
 ## Quick start
-def connect_wifi():
-    ### Typical Wi-Fi connection code for ESP board
-    
-    #import esp
-    import network
-    import time
-    import ubinascii
-
-    wlan_id = "piconet"
-    wlan_pass = "2b2b2b2b2b"
-
-    mac = ubinascii.hexlify(network.WLAN().config('mac'),':').decode()
-    print("MAC: " + mac)
-
-    wlan = network.WLAN(network.STA_IF)
-    wlan.active(True)
-    while wlan.status() is network.STAT_CONNECTING:
-        time.sleep(1)
-    while not wlan.isconnected():
-        wlan.connect(wlan_id, wlan_pass)
-    print("Connected... IP: " + wlan.ifconfig())  
-
-    
 
 def index(request):
     server.send('OK')
@@ -48,10 +25,11 @@ def get_cookies(request):
 if __name__ == "__main__":
     wfp = WifiPico()
     ip = wfp.connect_wifi()
-    
     server = MicroPyServer(host=ip)
+#     server = MicroPyServer(host=ip, port=8080)
     server.add_route("/", index)
     server.add_route("/stop", stop)
     server.add_route("/set_cookies", set_cookies)
     server.add_route("/get_cookies", get_cookies)
     server.start()
+

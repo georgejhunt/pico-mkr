@@ -1,0 +1,7 @@
+# %serialconnect /dev/ttyACM0
+from rp2 import machine
+rtc = machine.RTC()
+print("hi george")
+print(dir(rtc))
+"#rtc.datetime((2025, 11, 22, 15, 57, 32, 36, 0))\n",
+print(rtc.datetime())
